@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050208">
+<title>For You ❤️</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  background:#040208;
+  color:#fff;
+  font-family:'Cormorant Garamond',serif;
+}
+
+/* dreamy background */
+.bg{
+  position:fixed;inset:-15%;
+  background:
+    radial-gradient(circle at 20% 20%,#ff2d9d33 0,transparent 30%),
+    radial-gradient(circle at 82% 75%,#713cff38 0,transparent 32%),
+    radial-gradient(circle at 50% 45%,#ff74c51a 0,transparent 42%),
+    linear-gradient(135deg,#020106,#160512,#040208);
+  animation:bg 18s ease-in-out infinite alternate;
+}
+@keyframes bg{to{transform:scale(1.12) translate3d(-1%,1%,0)}}
+
+.blur{
+  position:fixed;width:280px;height:280px;border-radius:50%;
+  filter:blur(95px);opacity:.2;pointer-events:none
+}
+.b1{background:#ff168f;left:-130px;top:8%;animation:b1 12s infinite alternate}
+.b2{background:#7040ff;right:-140px;bottom:0;animation:b2 13s infinite alternate}
+@keyframes b1{to{transform:translate(170px,120px)}}
+@keyframes b2{to{transform:translate(-170px,-120px)}}
+
+/* particles */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:2}
+.p{
+  position:absolute;bottom:-20px;opacity:0;
+  animation:rise linear infinite;
+  text-shadow:0 0 12px #ff4fb8;
+}
+@keyframes rise{
+  0%{transform:translateY(0) scale(.5);opacity:0}
+  15%{opacity:.6}
+  80%{opacity:.35}
+  100%{transform:translateY(-115vh) translateX(40px) scale(1.2);opacity:0}
+}
+
+/* start */
+.start{
+  position:fixed;inset:0;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;
+  background:
+    radial-gradient(circle at center,#280a21 0,rgba(4,2,8,.97) 58%,#020106 100%);
+  transition:opacity 1.4s ease,visibility 1.4s ease;
+}
+.start.hide{opacity:0;visibility:hidden;pointer-events:none}
+
+.whisper{
+  font-family:Arial,sans-serif;font-size:10px;
+  letter-spacing:6px;color:#ffffff70;
+  margin-bottom:22px;animation:fadePulse 2.8s infinite alternate
+}
+@keyframes fadePulse{to{opacity:.35}}
+
+.quote{
+  max-width:90%;font-family:'Playfair Display',serif;
+  font-size:clamp(25px,6.5vw,48px);line-height:1.35;
+  background:linear-gradient(90deg,#fff,#ffb7e4,#fff);
+  background-size:200% auto;color:transparent;
+  -webkit-background-clip:text;background-clip:text;
+  animation:shine 5s linear infinite
+}
+@keyframes shine{to{background-position:200% center}}
+
+.startHeart{font-size:30px;margin-top:18px;animation:heart 1.6s infinite}
+@keyframes heart{50%{transform:scale(1.2)}}
+
+.tap{
+  margin-top:34px;padding:14px 34px;border-radius:999px;
+  border:1px solid #ffffff2e;background:#ffffff0b;color:#fff;
+  font:600 11px Arial,sans-serif;letter-spacing:4px;
+  cursor:pointer;backdrop-filter:blur(16px);
+  box-shadow:0 0 28px #ff269c33;
+  transition:.4s
+}
+.tap:hover{transform:scale(1.08);background:#ff269c1c;box-shadow:0 0 45px #ff269c66}
+.tap:active{transform:scale(.95)}
+
+/* main */
+.main{
+  position:relative;z-index:5;width:100%;height:100vh;
+  display:flex;align-items:center;justify-content:center;text-align:center
+}
+.content{width:min(1000px,92%);position:relative}
+.tag{
+  position:absolute;top:25px;left:50%;transform:translateX(-50%);
+  font:9px Arial,sans-serif;letter-spacing:5px;color:#ffacdfff
+}
+.heartTop{
+  position:absolute;right:22px;top:18px;font-size:25px;
+  filter:drop-shadow(0 0 14px #ff299c);animation:heart 1.6s infinite
+}
+
+/* hidden music visualizer: intentionally not showing song playback */
+.musicOrb{
+  width:64px;height:64px;margin:0 auto 20px;border-radius:50%;
+  background:radial-gradient(circle,#ffb4e7 0 4%,#251025 5% 26%,#08070b 27% 100%);
+  border:1px solid #ffffff20;box-shadow:0 0 32px #ff299c55;
+  animation:orb 5s linear infinite
+}
+@keyframes orb{to{transform:rotate(360deg)}}
+
+/* lyric stage */
+.stage{
+  min-height:300px;display:flex;align-items:center;justify-content:center;
+  padding:10px 5px;overflow:visible
+}
+.lineWrap{
+  position:relative;width:100%;
+  min-height:180px;display:flex;align-items:center;justify-content:center
+}
+.lyric{
+  position:absolute;left:0;right:0;
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,8vw,78px);
+  line-height:1.18;font-weight:600;letter-spacing:-1px;
+  text-shadow:0 0 18px #ff4ab866,0 0 50px #ff299c22;
+  opacity:0;
+  transform:translateY(-80px) scale(.96);
+  filter:blur(10px);
+  pointer-events:none;
+}
+.lyric.show{
+  animation:downSlow 2.4s cubic-bezier(.16,1,.3,1) forwards
+}
+.lyric.hide{
+  animation:leaveSlow 1.8s cubic-bezier(.4,0,.2,1) forwards
+}
+@keyframes downSlow{
+  0%{opacity:0;transform:translateY(-90px) scale(.94);filter:blur(12px)}
+  35%{opacity:.65;filter:blur(5px)}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+@keyframes leaveSlow{
+  0%{opacity:1;transform:translateY(0);filter:blur(0)}
+  100%{opacity:0;transform:translateY(65px) scale(.98);filter:blur(9px)}
+}
+.word{display:inline-block;opacity:.12;transform:translateY(12px);transition:opacity 1s ease,transform 1s ease,text-shadow 1s ease}
+.word.on{opacity:1;transform:translateY(0);text-shadow:0 0 15px #ff6bc8,0 0 35px #ff299c}
+.emo{
+  display:inline-block;margin-left:10px;
+  animation:emo 2.3s ease-in-out infinite alternate;
+  filter:drop-shadow(0 0 13px #ff3cae)
+}
+@keyframes emo{to{transform:translateY(-7px) rotate(5deg) scale(1.06)}}
+
+.counter{
+  position:absolute;top:calc(50% + 112px);left:0;right:0;
+  font:9px Arial,sans-serif;letter-spacing:4px;color:#ffffff38
+}
+
+/* end */
+.end{
+  position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;opacity:0;pointer-events:none;
+  background:radial-gradient(circle,#25091f55,#040208 65%);
+  transition:opacity 2s ease
+}
+.end.show{opacity:1}
+.endTitle{
+  font-family:'Playfair Display',serif;font-size:clamp(34px,8vw,66px);
+  text-shadow:0 0 30px #ff299c
+}
+.endSub{margin-top:15px;color:#ffffffaa;font-size:18px}
+.endEmoji{font-size:30px;margin-top:20px;animation:heart 1.7s infinite}
+
+/* tiny bottom note, no player/progress visible */
+.note{
+  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  font:8px Arial,sans-serif;letter-spacing:3px;color:#ffffff2b
+}
+
+@media(max-width:600px){
+  .tag{top:19px;letter-spacing:3px}
+  .heartTop{top:14px;right:14px}
+  .stage{min-height:285px}
+  .lyric{font-size:34px}
+  .counter{top:calc(50% + 108px)}
+}
+</style>
+</head>
+
+<body>
+<div class="bg"></div>
+<div class="blur b1"></div>
+<div class="blur b2"></div>
+<div id="particles"></div>
+
+<!-- START SCREEN -->
+<section class="start" id="startScreen">
+  <div class="whisper">WHEN SHE SAYS</div>
+  <div class="quote">“Mai itni bhi acchi nhi hu…”</div>
+  <div class="startHeart">🥺❤️</div>
+  <button class="tap" id="tap">TAP ❤️</button>
+</section>
+
+<!-- MAIN EXPERIENCE -->
+<main class="main">
+  <div class="tag">✦ JUST FOR YOU ✦</div>
+  <div class="heartTop">❤️</div>
+
+  <div class="content">
+    <div class="musicOrb"></div>
+
+    <div class="stage">
+      <div class="lineWrap">
+        <div id="lyric" class="lyric"></div>
+        <div id="counter" class="counter"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">A LITTLE SOMETHING FOR YOU ✦</div>
+</main>
+
+<section class="end" id="end">
+  <div class="endTitle">And that's the truth…</div>
+  <div class="endSub">You really are something special. ❤️</div>
+  <div class="endEmoji">✨🥺❤️</div>
+</section>
+
+<audio id="song" src="./song.mp3" preload="auto"></audio>
+
+<script>
+/* floating romantic particles */
+const particleBox=document.getElementById("particles");
+const symbols=["♡","✦","·","✨","♥"];
+
+for(let i=0;i<42;i++){
+  const p=document.createElement("span");
+  p.className="p";
+  p.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+  p.style.left=Math.random()*100+"%";
+  p.style.fontSize=(7+Math.random()*13)+"px";
+  p.style.animationDuration=(7+Math.random()*9)+"s";
+  p.style.animationDelay=(Math.random()*9)+"s";
+  particleBox.appendChild(p);
+}
+
+const song=document.getElementById("song");
+const startScreen=document.getElementById("startScreen");
+const tap=document.getElementById("tap");
+const lyric=document.getElementById("lyric");
+const counter=document.getElementById("counter");
+const end=document.getElementById("end");
+
+/*
+  Audio is only 15-ish seconds, so the transitions are deliberately
+  relaxed and the last line stays until the audio ends.
+*/
+const LYRICS=[
+  {time:0,    text:"Tu bemisaal hai",       emoji:"✨"},
+  {time:4.0,  text:"Teri kya misaal du",    emoji:"🥺"},
+  {time:8.0,  text:"Aasma se aai hai",      emoji:"🌙"},
+  {time:11.5, text:"Yehi kehke taal du",    emoji:"❤️"}
+];
+
+let current=-1;
+let started=false;
+
+function makeLine(item,index){
+  lyric.innerHTML="";
+
+  const words=item.text.split(" ");
+
+  words.forEach((word,i)=>{
+    const s=document.createElement("span");
+    s.className="word";
+    s.textContent=word;
+    lyric.appendChild(s);
+
+    if(i<words.length-1)
+      lyric.appendChild(document.createTextNode(" "));
+  });
+
+  const e=document.createElement("span");
+  e.className="emo";
+  e.textContent=item.emoji;
+  lyric.appendChild(e);
+
+  lyric.className="lyric show";
+  counter.textContent=String(index+1).padStart(2,"0")+" / "+String(LYRICS.length).padStart(2,"0");
+
+  /* very slow word reveal */
+  const wordEls=lyric.querySelectorAll(".word");
+  wordEls.forEach((w,i)=>{
+    setTimeout(()=>w.classList.add("on"),350+i*520);
+  });
+}
+
+function showLine(index){
+  if(index<0 || index>=LYRICS.length) return;
+
+  if(current!==-1){
+    lyric.className="lyric hide";
+
+    setTimeout(()=>{
+      makeLine(LYRICS[index],index);
+    },650);
+  }else{
+    makeLine(LYRICS[index],index);
+  }
+
+  current=index;
+}
+
+function findLine(t){
+  let found=0;
+  for(let i=0;i<LYRICS.length;i++){
+    if(t>=LYRICS[i].time) found=i;
+  }
+  return found;
+}
+
+/* TAP: hide intro immediately, then start audio */
+tap.addEventListener("click",async()=>{
+  if(started)return;
+  started=true;
+
+  startScreen.classList.add("hide");
+  showLine(0);
+
+  song.currentTime=0;
+
+  try{
+    await song.play();
+  }catch(err){
+    console.log("Audio could not autoplay:",err);
+    /* Visual experience continues even if local preview blocks audio. */
+  }
+});
+
+/* Sync lyrics to the actual song time */
+song.addEventListener("timeupdate",()=>{
+  if(!started)return;
+
+  const line=findLine(song.currentTime);
+
+  if(line!==current) showLine(line);
+});
+
+/* If audio metadata is available, ensure the last line remains visible */
+song.addEventListener("ended",()=>{
+  showLine(LYRICS.length-1);
+
+  setTimeout(()=>{
+    end.classList.add("show");
+  },1400);
+});
+</script>
+</body>
+</html>
